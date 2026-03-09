@@ -20,11 +20,31 @@ if not os.path.exists(submission_file):
     print(f"Submission not found: {submission_file}")
     sys.exit(1)
 
+if os.path.getsize(submission_file) == 0:
+    print("Submission file is empty.")
+    sys.exit(1)
+
 try:
     y_true = pd.read_csv(labels_file, header=None).iloc[:, 0].values.astype(str)
-    y_pred = pd.read_csv(submission_file, header=None).iloc[:, 0].values.astype(str)
 except Exception as e:
-    print(f"Could not read files: {e}")
+    print(f"Could not read test labels: {e}")
+    sys.exit(1)
+
+# Try multiple encodings to handle BOM and special characters
+try:
+    raw = open(submission_file, 'r', encoding='utf-8-sig').read().strip()
+    lines = [l.strip() for l in raw.splitlines() if l.strip()]
+    y_pred = np.array(lines)
+except Exception as e:
+    print(f"Could not read submission: {e}")
+    sys.exit(1)
+
+print(f"Test labels : {len(y_true)}")
+print(f"Predictions : {len(y_pred)}")
+print(f"Sample pred : {y_pred[:3]}")
+
+if len(y_pred) == 0:
+    print("Submission file has no predictions.")
     sys.exit(1)
 
 if len(y_pred) != len(y_true):
