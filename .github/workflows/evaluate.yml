@@ -57,16 +57,16 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
         run: python leaderboard/update.py score.json
 
-      - name: Commit leaderboard
+      - name: Commit leaderboard to main
         if: steps.submission.outputs.file != ''
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin ${{ github.head_ref }}
-          git checkout ${{ github.head_ref }}
+          git fetch origin main
+          git checkout main
           git add leaderboard/README.md scores.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Leaderboard update: ${{ github.actor }}"
-          git push origin ${{ github.head_ref }}
+          git push origin main
 
       - name: Post score as PR comment
         if: steps.submission.outputs.file != ''
@@ -95,5 +95,5 @@ jobs:
                     `|--------|-------|-------|\n` +
                     `| 🎯 Accuracy | **${accuracy}%** | ${grade} |\n` +
                     `| 📐 F1 Score (macro) | **${f1}%** | ${grade} |\n\n` +
-                    `> See full rankings → [Leaderboard](../leaderboard/README.md)`
+                    `> See full rankings → [Leaderboard](https://github.com/${{ github.repository }}/blob/main/leaderboard/README.md)`
             });
