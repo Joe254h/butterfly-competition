@@ -1,4 +1,4 @@
-# 🦋 Butterfly Classification Competition
+🦋 Butterfly Classification Competition
 
 > A mini Kaggle-style competition — classify **75 butterfly species** and climb the leaderboard automatically!
 
