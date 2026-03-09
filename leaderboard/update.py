@@ -1,12 +1,3 @@
-"""
-leaderboard/update.py
----------------------
-Updates the leaderboard after an evaluation.
-Run automatically by GitHub Actions -- participants do NOT run this.
-
-Usage:
-    python leaderboard/update.py score.json
-"""
 
 import json, os, sys
 from datetime import datetime
