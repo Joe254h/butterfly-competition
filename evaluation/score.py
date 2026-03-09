@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import json
 import sys
 import os
@@ -24,20 +23,13 @@ if os.path.getsize(submission_file) == 0:
     print("Submission file is empty.")
     sys.exit(1)
 
-try:
-    y_true = pd.read_csv(labels_file, header=None).iloc[:, 0].values.astype(str)
-except Exception as e:
-    print(f"Could not read test labels: {e}")
-    sys.exit(1)
+# Read labels
+y_true = open(labels_file, 'r', encoding='utf-8-sig').read().strip().splitlines()
+y_true = [s.strip().upper() for s in y_true if s.strip()]
 
-# Try multiple encodings to handle BOM and special characters
-try:
-    raw = open(submission_file, 'r', encoding='utf-8-sig').read().strip()
-    lines = [l.strip() for l in raw.splitlines() if l.strip()]
-    y_pred = np.array(lines)
-except Exception as e:
-    print(f"Could not read submission: {e}")
-    sys.exit(1)
+# Read submission
+y_pred = open(submission_file, 'r', encoding='utf-8-sig').read().strip().splitlines()
+y_pred = [s.strip().upper() for s in y_pred if s.strip()]
 
 print(f"Test labels : {len(y_true)}")
 print(f"Predictions : {len(y_pred)}")
@@ -51,8 +43,8 @@ if len(y_pred) != len(y_true):
     print(f"Length mismatch: got {len(y_pred)}, expected {len(y_true)}")
     sys.exit(1)
 
-y_true = np.array([s.strip().upper() for s in y_true])
-y_pred = np.array([s.strip().upper() for s in y_pred])
+y_true = np.array(y_true)
+y_pred = np.array(y_pred)
 
 accuracy = float(accuracy_score(y_true, y_pred))
 f1       = float(f1_score(y_true, y_pred, average='macro', zero_division=0))
