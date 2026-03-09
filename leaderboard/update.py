@@ -50,9 +50,9 @@ def update_leaderboard(accuracy, f1, username):
     ]
 
     for i, s in enumerate(top20):
-        rank  = i + 1
-        label = medals.get(rank, str(rank))
-        acc   = f"{s['accuracy']*100:.2f}%"
+        rank   = i + 1
+        label  = medals.get(rank, str(rank))
+        acc    = f"{s['accuracy']*100:.2f}%"
         f1_val = f"{s['f1']*100:.2f}%"
         lines.append(f"| {label} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |")
 
@@ -77,12 +77,3 @@ if __name__ == "__main__":
         data = json.load(f)
     username = os.environ.get("GITHUB_ACTOR", "unknown")
     update_leaderboard(data["accuracy"], data.get("f1_macro", 0.0), username)
-```
-
----
-
-## `requirements.txt`
-```
-numpy
-pandas
-scikit-learn
