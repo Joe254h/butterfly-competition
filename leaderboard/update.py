@@ -4,7 +4,7 @@ import sys
 from datetime import datetime
 
 LEADERBOARD_FILE = "leaderboard/README.md"
-SCORES_FILE = "scores.json"
+SCORES_FILE      = "scores.json"
 
 
 def load_scores():
@@ -20,87 +20,69 @@ def save_scores(scores):
 
 
 def update_leaderboard(accuracy, f1, username):
-
     scores = load_scores()
 
-    submission = {
-        "user": username,
+    scores.append({
+        "user":     username,
         "accuracy": accuracy,
-        "f1": f1,
-        "date": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-    }
-
-    scores.append(submission)
+        "f1":       f1,
+        "date":     datetime.utcnow().strftime("%Y-%m-%d"),
+    })
 
     save_scores(scores)
 
-    # keep best score per user
-    best_scores = {}
-
+    best = {}
     for s in scores:
-        user = s["user"]
+        u = s["user"]
+        if u not in best or s["accuracy"] > best[u]["accuracy"]:
+            best[u] = s
 
-        if user not in best_scores or s["accuracy"] > best_scores[user]["accuracy"]:
-            best_scores[user] = s
-
-    leaderboard = sorted(
-        best_scores.values(),
-        key=lambda x: x["accuracy"],
-        reverse=True
-    )
-
-    medals = ["🥇", "🥈", "🥉"]
+    top20  = sorted(best.values(), key=lambda x: x["accuracy"], reverse=True)[:20]
+    medals = {1: "1st", 2: "2nd", 3: "3rd"}
 
     lines = [
-        "# 🦋 Butterfly Classification Leaderboard",
+        "# Butterfly Classification Leaderboard",
         "",
-        f"Last updated: **{datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}**",
+        f"*Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}*",
         "",
         "| Rank | Participant | Accuracy | F1 (macro) | Date |",
-        "|------|-------------|----------|------------|------|"
+        "|------|-------------|----------|------------|------|",
     ]
 
-    for i, s in enumerate(leaderboard[:20]):
-
-        rank = medals[i] if i < 3 else str(i + 1)
-
-        acc = f"{s['accuracy']*100:.2f}%"
+    for i, s in enumerate(top20):
+        rank  = i + 1
+        label = medals.get(rank, str(rank))
+        acc   = f"{s['accuracy']*100:.2f}%"
         f1_val = f"{s['f1']*100:.2f}%"
+        lines.append(f"| {label} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |")
 
-        lines.append(
-            f"| {rank} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |"
-        )
-
-    lines.append("")
-    lines.append(f"**Total submissions:** {len(scores)}")
-    lines.append(f"**Participants:** {len(best_scores)}")
+    lines += [
+        "",
+        f"*Best score per participant. Total submissions: {len(scores)}*",
+    ]
 
     os.makedirs("leaderboard", exist_ok=True)
-
     with open(LEADERBOARD_FILE, "w") as f:
         f.write("\n".join(lines))
 
-    print("Leaderboard updated successfully.")
+    rank_pos = next((i+1 for i, s in enumerate(top20) if s["user"] == username), "N/A")
+    print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos}")
 
 
 if __name__ == "__main__":
-
-    score_file = "score.json"
-
-    if len(sys.argv) > 1 and sys.argv[1].endswith(".json"):
-        score_file = sys.argv[1]
-
-    if not os.path.exists(score_file):
-        print("score.json not found.")
+    if len(sys.argv) < 2:
+        print("Usage: python leaderboard/update.py score.json")
         sys.exit(1)
-
-    with open(score_file) as f:
+    with open(sys.argv[1]) as f:
         data = json.load(f)
+    username = os.environ.get("GITHUB_ACTOR", "unknown")
+    update_leaderboard(data["accuracy"], data.get("f1_macro", 0.0), username)
+```
 
-    username = os.environ.get("GITHUB_ACTOR", "local_user")
+---
 
-    update_leaderboard(
-        data["accuracy"],
-        data.get("f1_macro", 0.0),
-        username
-    )
+## `requirements.txt`
+```
+numpy
+pandas
+scikit-learn
