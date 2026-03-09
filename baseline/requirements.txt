@@ -1,0 +1,7 @@
+numpy
+pandas
+Pillow
+tqdm
+scikit-learn
+tensorflow>=2.10
+tensorflow-hub
