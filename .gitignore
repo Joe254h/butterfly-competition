@@ -1,9 +1,13 @@
 
 __pycache__/
-*.pyc
+*.py[cod]
+*.h5
 *.npy
-*.pth
+score.json
+
+# hide true labels
 evaluation/test_labels.csv
+
 
 name: Evaluate Submission
 
