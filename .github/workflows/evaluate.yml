@@ -63,7 +63,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
+          git stash
           git checkout main
+          git stash pop
           git add leaderboard/README.md scores.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Leaderboard update: ${{ github.actor }}"
           git push origin main
