@@ -1,4 +1,6 @@
 #🦋 Butterfly Classification Competition
+<img width="1600" height="1066" alt="image" src="https://github.com/user-attachments/assets/16029caa-64e3-4d4d-ba87-e1defeb55cd8" />
+
 
 > A mini Kaggle-style competition — classify **75 butterfly species** and climb the leaderboard automatically!
 
