@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.h5
+*.npy
+label_classes.npy
+score.json
+.DS_Store
+
+# NEVER commit test labels — they go in GitHub Secrets
+evaluation/test_labels.csv
