@@ -14,19 +14,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install numpy pandas scikit-learn
+        run: pip install numpy scikit-learn
 
       - name: Decode test labels
         env:
@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "$TEST_LABELS_B64" | base64 --decode > evaluation/test_labels.csv
 
-      - name: Detect submission file
+      - name: Detect submitted file
         id: submission
         run: |
           FILE=$(git diff --name-only --diff-filter=A origin/${{ github.base_ref }}...HEAD | grep '^submissions/' | head -n1)
@@ -57,18 +57,18 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
         run: python leaderboard/update.py score.json
 
-      - name: Commit leaderboard
+      - name: Commit leaderboard to main
         if: steps.submission.outputs.file != ''
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin ${{ github.head_ref }}
-          git checkout ${{ github.head_ref }}
+          git fetch origin main
+          git checkout main
           git add leaderboard/README.md scores.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Leaderboard update: ${{ github.actor }}"
-          git push origin ${{ github.head_ref }}
+          git push origin main
 
-      - name: Comment score on PR
+      - name: Post score as PR comment
         if: steps.submission.outputs.file != ''
         uses: actions/github-script@v6
         with:
@@ -77,18 +77,23 @@ jobs:
             const score = JSON.parse(fs.readFileSync('score.json', 'utf8'));
             const accuracy = (score.accuracy * 100).toFixed(2);
             const f1 = (score.f1_macro * 100).toFixed(2);
+
+            let grade = '';
+            if (score.accuracy >= 0.90) grade = 'Excellent';
+            else if (score.accuracy >= 0.80) grade = 'Good';
+            else if (score.accuracy >= 0.70) grade = 'Fair';
+            else if (score.accuracy >= 0.50) grade = 'Needs improvement';
+            else grade = 'Keep trying';
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: [
-                '## Butterfly Submission Evaluated',
-                '',
-                '| Metric | Score |',
-                '|--------|-------|',
-                `| Accuracy | ${accuracy}% |`,
-                `| F1 (macro) | ${f1}% |`,
-                '',
-                `**Participant:** @${{ github.actor }}`,
-              ].join('\n')
+              body: `## 🦋 Butterfly Submission Evaluated\n\n` +
+                    `**Participant:** @${{ github.actor }}\n\n` +
+                    `| Metric | Score | Grade |\n` +
+                    `|--------|-------|-------|\n` +
+                    `| 🎯 Accuracy | **${accuracy}%** | ${grade} |\n` +
+                    `| 📐 F1 Score (macro) | **${f1}%** | ${grade} |\n\n` +
+                    `> See full rankings → [Leaderboard](https://github.com/${{ github.repository }}/blob/main/leaderboard/README.md)`
             });
