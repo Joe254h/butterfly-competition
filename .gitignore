@@ -1,0 +1,6 @@
+
+__pycache__/
+*.pyc
+*.npy
+*.pth
+evaluation/test_labels.csv
