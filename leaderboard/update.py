@@ -31,42 +31,62 @@ def update_leaderboard(accuracy, f1, username):
 
     save_scores(scores)
 
+    # Keep best score per participant
     best = {}
     for s in scores:
         u = s["user"]
         if u not in best or s["accuracy"] > best[u]["accuracy"]:
             best[u] = s
 
-    top20  = sorted(best.values(), key=lambda x: x["accuracy"], reverse=True)[:20]
-    medals = {1: "1st", 2: "2nd", 3: "3rd"}
+    # Sort all participants by accuracy
+    ranked = sorted(best.values(), key=lambda x: x["accuracy"], reverse=True)
+
+    medals = {1: "🥇", 2: "🥈", 3: "🥉"}
 
     lines = [
-        "# Butterfly Classification Leaderboard",
+        "# 🦋 Butterfly Classification Leaderboard",
         "",
         f"*Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}*",
+        "",
+        f"**Total submissions:** {len(scores)} &nbsp;|&nbsp; **Participants:** {len(ranked)}",
         "",
         "| Rank | Participant | Accuracy | F1 (macro) | Date |",
         "|------|-------------|----------|------------|------|",
     ]
 
-    for i, s in enumerate(top20):
+    for i, s in enumerate(ranked):
         rank   = i + 1
-        label  = medals.get(rank, str(rank))
+        medal  = medals.get(rank, str(rank))
         acc    = f"{s['accuracy']*100:.2f}%"
         f1_val = f"{s['f1']*100:.2f}%"
-        lines.append(f"| {label} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |")
+        lines.append(
+            f"| {medal} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |"
+        )
 
     lines += [
         "",
-        f"*Best score per participant. Total submissions: {len(scores)}*",
+        "---",
+        "",
+        "## 📤 How to Submit",
+        "",
+        "1. Open the Colab notebook and run all cells",
+        "2. Download your `YOUR_NAME_submission.csv`",
+        "3. Go to [submissions/](../submissions/) → **Add file → Upload files**",
+        "4. Select **Create a new branch** at the bottom — NOT commit to main",
+        "5. Click **Propose changes → Create pull request**",
+        "6. Your score appears here automatically",
+        "",
+        "---",
+        "",
+        f"*Best score per participant shown. Total submissions: {len(scores)}*",
     ]
 
     os.makedirs("leaderboard", exist_ok=True)
     with open(LEADERBOARD_FILE, "w") as f:
         f.write("\n".join(lines))
 
-    rank_pos = next((i+1 for i, s in enumerate(top20) if s["user"] == username), "N/A")
-    print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos}")
+    rank_pos = next((i+1 for i, s in enumerate(ranked) if s["user"] == username), "N/A")
+    print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos} of {len(ranked)}")
 
 
 if __name__ == "__main__":
