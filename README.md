@@ -31,7 +31,7 @@ butterfly-competition/
 
 Click the link below to open the competition notebook:
 
-👉 **[Open Colab Notebook](YOUR_COLAB_LINK_HERE)**
+👉 **[Open Colab Notebook](https://colab.research.google.com/#fileId=https%3A//storage.googleapis.com/kaggle-colab-exported-notebooks/joelnyong/butterfly-competition.84090f66-6fe2-4fc1-82a3-20da36430354.ipynb%3FX-Goog-Algorithm%3DGOOG4-RSA-SHA256%26X-Goog-Credential%3Dgcp-kaggle-com%2540kaggle-161607.iam.gserviceaccount.com/20260310/auto/storage/goog4_request%26X-Goog-Date%3D20260310T104332Z%26X-Goog-Expires%3D259200%26X-Goog-SignedHeaders%3Dhost%26X-Goog-Signature%3D491fc9f53bd2c57673f471e5690d8481b1cc484963fd3c6d19ace354748e99d601426644d1af159393ce002146055141da6b3e1985445420bd5e15ab6807a86241f238596ce972562331c105e7806340c8ae7606b1ac38d7c34062fccffa3380a82235d4f7b91fb20be4c578c722c79036b9d51b5027b7bafce958b68904f45a60e79342a17c54b73276441a3b5f896fb8bb191c6bdedfcfecbfef4b40365e320fb80d8fab0ed9a8167529c9c79fac5b390a771837a4e5c2a320dbb11eb307fc4ea0fd64fb87149e162e4171f18a5cbc0342f94447ec8106638993928b9b845906ca275f1de6ab2f41976fcfd00d3e38ee5745840fbc82a981779310a3ee3f91)**
 
 The notebook will:
 - Download the dataset automatically from Kaggle
