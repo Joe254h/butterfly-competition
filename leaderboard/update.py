@@ -31,15 +31,15 @@ def update_leaderboard(accuracy, f1, username):
 
     save_scores(scores)
 
-    # Keep best score per participant
+    # Sort ALL submissions by accuracy — every submission gets a row
+    all_ranked = sorted(scores, key=lambda x: x["accuracy"], reverse=True)
+
+    # Best per participant for summary stats
     best = {}
     for s in scores:
         u = s["user"]
         if u not in best or s["accuracy"] > best[u]["accuracy"]:
             best[u] = s
-
-    # Sort all participants by accuracy
-    ranked = sorted(best.values(), key=lambda x: x["accuracy"], reverse=True)
 
     medals = {1: "🥇", 2: "🥈", 3: "🥉"}
 
@@ -48,19 +48,22 @@ def update_leaderboard(accuracy, f1, username):
         "",
         f"*Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}*",
         "",
-        f"**Total submissions:** {len(scores)} &nbsp;|&nbsp; **Participants:** {len(ranked)}",
+        f"**Total submissions:** {len(scores)} &nbsp;|&nbsp; **Participants:** {len(best)}",
         "",
         "| Rank | Participant | Accuracy | F1 (macro) | Date |",
         "|------|-------------|----------|------------|------|",
     ]
 
-    for i, s in enumerate(ranked):
+    for i, s in enumerate(all_ranked):
         rank   = i + 1
         medal  = medals.get(rank, str(rank))
         acc    = f"{s['accuracy']*100:.2f}%"
         f1_val = f"{s['f1']*100:.2f}%"
+        # Mark best submission per participant with a star
+        is_best = best.get(s["user"]) == s
+        name    = f"**{s['user']}** ⭐" if is_best else s["user"]
         lines.append(
-            f"| {medal} | **{s['user']}** | {acc} | {f1_val} | {s['date']} |"
+            f"| {medal} | {name} | {acc} | {f1_val} | {s['date']} |"
         )
 
     lines += [
@@ -78,15 +81,15 @@ def update_leaderboard(accuracy, f1, username):
         "",
         "---",
         "",
-        f"*Best score per participant shown. Total submissions: {len(scores)}*",
+        f"*⭐ = best score per participant. Total submissions: {len(scores)}*",
     ]
 
     os.makedirs("leaderboard", exist_ok=True)
     with open(LEADERBOARD_FILE, "w") as f:
         f.write("\n".join(lines))
 
-    rank_pos = next((i+1 for i, s in enumerate(ranked) if s["user"] == username), "N/A")
-    print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos} of {len(ranked)}")
+    rank_pos = next((i+1 for i, s in enumerate(all_ranked) if s["user"] == username and s["accuracy"] == accuracy), "N/A")
+    print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos} of {len(scores)}")
 
 
 if __name__ == "__main__":
