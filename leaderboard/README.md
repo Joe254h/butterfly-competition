@@ -1,12 +1,13 @@
 # 🦋 Butterfly Classification Leaderboard
 
-*Last updated: 2026-03-10 11:10 UTC*
+*Last updated: 2026-03-10 11:37 UTC*
 
-**Total submissions:** 1 &nbsp;|&nbsp; **Participants:** 1
+**Total submissions:** 2 &nbsp;|&nbsp; **Participants:** 1
 
 | Rank | Participant | Accuracy | F1 (macro) | Date |
 |------|-------------|----------|------------|------|
 | 🥇 | **Joe254h** ⭐ | 75.23% | 74.83% | 2026-03-10 |
+| 🥈 | Joe254h | 57.38% | 55.52% | 2026-03-10 |
 
 ---
 
@@ -21,4 +22,4 @@
 
 ---
 
-*⭐ = best score per participant. Total submissions: 1*
+*⭐ = best score per participant. Total submissions: 2*
