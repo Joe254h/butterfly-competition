@@ -6,35 +6,37 @@ from datetime import datetime
 LEADERBOARD_FILE = "leaderboard/README.md"
 SCORES_FILE      = "scores.json"
 
-
 def load_scores():
     if os.path.exists(SCORES_FILE):
-        with open(SCORES_FILE) as f:
-            return json.load(f)
+        if os.path.getsize(SCORES_FILE) == 0:
+            return []
+        try:
+            with open(SCORES_FILE) as f:
+                content = f.read().strip()
+                if not content:
+                    return []
+                return json.loads(content)
+        except (json.JSONDecodeError, ValueError):
+            print(f"Warning: {SCORES_FILE} is corrupted — resetting to empty")
+            return []
     return []
-
 
 def save_scores(scores):
     with open(SCORES_FILE, "w") as f:
         json.dump(scores, f, indent=2)
 
-
 def update_leaderboard(accuracy, f1, username):
     scores = load_scores()
-
     scores.append({
         "user":     username,
         "accuracy": accuracy,
         "f1":       f1,
         "date":     datetime.utcnow().strftime("%Y-%m-%d"),
     })
-
     save_scores(scores)
 
-    # Sort ALL submissions by accuracy — every submission gets a row
     all_ranked = sorted(scores, key=lambda x: x["accuracy"], reverse=True)
 
-    # Best per participant for summary stats
     best = {}
     for s in scores:
         u = s["user"]
@@ -42,7 +44,6 @@ def update_leaderboard(accuracy, f1, username):
             best[u] = s
 
     medals = {1: "🥇", 2: "🥈", 3: "🥉"}
-
     lines = [
         "# 🦋 Butterfly Classification Leaderboard",
         "",
@@ -55,11 +56,10 @@ def update_leaderboard(accuracy, f1, username):
     ]
 
     for i, s in enumerate(all_ranked):
-        rank   = i + 1
-        medal  = medals.get(rank, str(rank))
-        acc    = f"{s['accuracy']*100:.2f}%"
-        f1_val = f"{s['f1']*100:.2f}%"
-        # Mark best submission per participant with a star
+        rank    = i + 1
+        medal   = medals.get(rank, str(rank))
+        acc     = f"{s['accuracy']*100:.2f}%"
+        f1_val  = f"{s['f1']*100:.2f}%"
         is_best = best.get(s["user"]) == s
         name    = f"**{s['user']}** ⭐" if is_best else s["user"]
         lines.append(
@@ -88,9 +88,12 @@ def update_leaderboard(accuracy, f1, username):
     with open(LEADERBOARD_FILE, "w") as f:
         f.write("\n".join(lines))
 
-    rank_pos = next((i+1 for i, s in enumerate(all_ranked) if s["user"] == username and s["accuracy"] == accuracy), "N/A")
+    rank_pos = next(
+        (i+1 for i, s in enumerate(all_ranked)
+         if s["user"] == username and s["accuracy"] == accuracy),
+        "N/A"
+    )
     print(f"Leaderboard updated. {username}: {accuracy*100:.2f}% — Rank #{rank_pos} of {len(scores)}")
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
