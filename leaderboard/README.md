@@ -1,8 +1,8 @@
 # 🦋 Butterfly Classification Leaderboard
 
-*Last updated: 2026-03-13 16:10 UTC*
+*Last updated: 2026-03-14 17:36 UTC*
 
-**Total submissions:** 6 &nbsp;|&nbsp; **Participants:** 4
+**Total submissions:** 7 &nbsp;|&nbsp; **Participants:** 5
 
 | Rank | Participant | Accuracy | F1 (macro) | Date |
 |------|-------------|----------|------------|------|
@@ -12,6 +12,7 @@
 | 4 | **BwiraC** ⭐ | 93.92% | 93.93% | 2026-03-13 |
 | 5 | **akakposara-ui** ⭐ | 92.00% | 91.98% | 2026-03-13 |
 | 6 | **akakposara-ui** ⭐ | 92.00% | 91.98% | 2026-03-13 |
+| 7 | **Ogoun09gerbad** ⭐ | 81.85% | 81.49% | 2026-03-14 |
 
 ---
 
@@ -26,4 +27,4 @@
 
 ---
 
-*⭐ = best score per participant. Total submissions: 6*
+*⭐ = best score per participant. Total submissions: 7*
