@@ -1,18 +1,19 @@
 # 🦋 Butterfly Classification Leaderboard
 
-*Last updated: 2026-03-14 17:36 UTC*
+*Last updated: 2026-03-15 00:46 UTC*
 
-**Total submissions:** 7 &nbsp;|&nbsp; **Participants:** 5
+**Total submissions:** 8 &nbsp;|&nbsp; **Participants:** 5
 
 | Rank | Participant | Accuracy | F1 (macro) | Date |
 |------|-------------|----------|------------|------|
-| 🥇 | **LogicX** ⭐ | 94.62% | 94.59% | 2026-03-13 |
-| 🥈 | **JHARILOVA** ⭐ | 94.46% | 94.42% | 2026-03-13 |
-| 🥉 | **BwiraC** ⭐ | 93.92% | 93.93% | 2026-03-13 |
-| 4 | **BwiraC** ⭐ | 93.92% | 93.93% | 2026-03-13 |
-| 5 | **akakposara-ui** ⭐ | 92.00% | 91.98% | 2026-03-13 |
+| 🥇 | **BwiraC** ⭐ | 94.77% | 94.79% | 2026-03-15 |
+| 🥈 | **LogicX** ⭐ | 94.62% | 94.59% | 2026-03-13 |
+| 🥉 | **JHARILOVA** ⭐ | 94.46% | 94.42% | 2026-03-13 |
+| 4 | BwiraC | 93.92% | 93.93% | 2026-03-13 |
+| 5 | BwiraC | 93.92% | 93.93% | 2026-03-13 |
 | 6 | **akakposara-ui** ⭐ | 92.00% | 91.98% | 2026-03-13 |
-| 7 | **Ogoun09gerbad** ⭐ | 81.85% | 81.49% | 2026-03-14 |
+| 7 | **akakposara-ui** ⭐ | 92.00% | 91.98% | 2026-03-13 |
+| 8 | **Ogoun09gerbad** ⭐ | 81.85% | 81.49% | 2026-03-14 |
 
 ---
 
@@ -27,4 +28,4 @@
 
 ---
 
-*⭐ = best score per participant. Total submissions: 7*
+*⭐ = best score per participant. Total submissions: 8*
